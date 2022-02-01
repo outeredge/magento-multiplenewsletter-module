@@ -1,0 +1,38 @@
+<?php
+/**
+ * @var \OuterEdge\Multiplenewsletter\Block\Form\NewsletterOptions $block
+ */
+
+$newsletterOptions = $block->getNewsletterOptions();
+?>
+
+<?php foreach($newsletterOptions->getElements() as $newsletters) : ?>
+    <?php $isEnabled = $block->getNewsletterOptionsByCustomer($newsletters->getNewsletterOptionsCode()); ?>
+    <div class="field choice">
+        <input type="checkbox" onClick="unCheckAll(this);" name="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>]"
+            id="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>"
+            value="1"
+            title="<?= $block->escapeHtml($newsletters->getTitle()) ?>"
+            <?php if($isEnabled): ?> checked="checked"<?php endif; ?> class="checkbox"
+        />
+        <label for="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>">
+            <?= $block->escapeHtml($newsletters->getTitle()) ?>
+        </label>
+    </div>
+<?php endforeach; ?>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+    //]]>
+    function checkAll(source) {
+        checkboxes = document.getElementsByClassName('checkbox');
+        for ( var i in checkboxes)
+            checkboxes[i].checked = source.checked;
+    }
+    function unCheckAll(source) {
+        allSubscription = document.getElementById('subscription');
+        allSubscription.checked = false;
+    }
+</script>
+
