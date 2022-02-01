@@ -46,19 +46,17 @@ class UpdateOptions implements ObserverInterface
     public function execute(Observer $observer) : void
     {
         $newsOptions = $observer->getRequest()->getParam('newsletter_options', false);
-        if ($newsOptions) {
+        
+        $dataToSave = json_encode($newsOptions);
 
-            $dataToSave = json_encode($newsOptions);
+        $storeId = (int)$this->storeManager->getStore()->getId();
+        $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
 
-            $storeId = (int)$this->storeManager->getStore()->getId();
-            $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
-
-            try {
-                $subscriber = $this->subscriber->loadByCustomerId($this->getCustomerId(), $websiteId);
-                $subscriber->setNewsletterOptions($dataToSave)->save();
-            } catch (\Exception $e) {
-                throw new \Exception('Error saving multiple newsletter');
-            }
+        try {
+            $subscriber = $this->subscriber->loadByCustomerId($this->getCustomerId(), $websiteId);
+            $subscriber->setNewsletterOptions($dataToSave)->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Error saving multiple newsletter');
         }
     }
 
