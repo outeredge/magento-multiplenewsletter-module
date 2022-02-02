@@ -63,7 +63,7 @@ class Options extends Template
         }
 
         $customer = $this->customerRepositoryInterface->getById($customerId);
-        $customerNewsOpt = $customer->getCustomAttribute('newsletter_options');
+        $customerNewsOpt = $customer->getCustomAttribute('newsletter_options')->getValue();
 
         if (!empty($customerNewsOpt)) {
             $result = json_decode($customerNewsOpt, true);
