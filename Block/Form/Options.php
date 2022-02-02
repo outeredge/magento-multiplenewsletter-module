@@ -6,7 +6,7 @@ use Magento\Framework\View\Element\Template;
 use OuterEdge\Layout\Helper\Data as LayoutHelper;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Customer\Model\SessionFactory;
-use Magento\Newsletter\Model\Subscriber;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 class Options extends Template
 {
@@ -23,27 +23,27 @@ class Options extends Template
     protected $sessionFactory;
 
     /**
-     * @var Subscriber
+     * @var CustomerRepositoryInterface
      */
-    protected $subscriber;
+    protected $customerRepositoryInterface;
 
     /**
      * @param Context $context
      * @param LayoutHelper $layoutHelper
      * @param SessionFactory $sessionFactory
-     * @param Subscriber $subscriber
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param array $data
      */
     public function __construct(
         Context $context,
         LayoutHelper $layoutHelper,
         SessionFactory $sessionFactory,
-        Subscriber $subscriber,
+        CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     ) {
         $this->layoutHelper = $layoutHelper;
         $this->sessionFactory = $sessionFactory;
-        $this->subscriber = $subscriber;
+        $this->customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context, $data);
     }
 
@@ -62,10 +62,9 @@ class Options extends Template
             return false;
         }
 
-        $customerNews = $this->subscriber->loadByCustomerId($customerId);
-        $customerNewsOpt = $customerNews->getNewsletterOptions();
+        $customer = $this->customerRepositoryInterface->getById($customerId);
+        $customerNewsOpt = $customer->getCustomAttribute('newsletter_options');
 
-        $newsOptions = [];
         if (!empty($customerNewsOpt)) {
             $result = json_decode($customerNewsOpt, true);
 

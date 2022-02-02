@@ -6,7 +6,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Customer\Model\SessionFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Newsletter\Model\Subscriber;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 class UpdateOptions implements ObserverInterface
 {
@@ -15,10 +15,10 @@ class UpdateOptions implements ObserverInterface
      */
     protected $storeManager;
 
-     /**
-     * @var Subscriber
+    /**
+     * @var CustomerRepositoryInterface
      */
-    protected $subscriber;
+    protected $customerRepositoryInterface;
 
     /**
      * @var SessionFactory
@@ -27,16 +27,16 @@ class UpdateOptions implements ObserverInterface
 
     /**
      * @param StoreManagerInterface $storeManager
-     * @param Subscriber $subscriber
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param SessionFactory $sessionFactory
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        Subscriber $subscriber,
+        CustomerRepositoryInterface $customerRepositoryInterface,
         SessionFactory $sessionFactory
     ) {
         $this->storeManager = $storeManager;
-        $this->subscriber = $subscriber;
+        $this->customerRepositoryInterface = $customerRepositoryInterface;
         $this->sessionFactory = $sessionFactory;
     }
 
@@ -46,15 +46,18 @@ class UpdateOptions implements ObserverInterface
     public function execute(Observer $observer) : void
     {
         $newsOptions = $observer->getRequest()->getParam('newsletter_options', false);
-        
+
         $dataToSave = json_encode($newsOptions);
 
         $storeId = (int)$this->storeManager->getStore()->getId();
         $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
 
         try {
-            $subscriber = $this->subscriber->loadByCustomerId($this->getCustomerId(), $websiteId);
-            $subscriber->setNewsletterOptions($dataToSave)->save();
+            $customer = $this->customerRepositoryInterface->getById($this->getCustomerId());
+            $customer->setCustomAttribute('newsletter_options', $dataToSave);
+
+            $this->customerRepositoryInterface->save($customer);
+
         } catch (\Exception $e) {
             throw new \Exception('Error saving multiple newsletter');
         }
