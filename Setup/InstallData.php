@@ -9,17 +9,18 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Eav\Model\Config;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Api\CustomerMetadataInterface;
 
 class InstallData implements InstallDataInterface
 {
-    private $eavSetupFactory;
+	private $eavSetupFactory;
 
 	public function __construct(EavSetupFactory $eavSetupFactory, Config $eavConfig)
 	{
 		$this->eavSetupFactory = $eavSetupFactory;
 		$this->eavConfig       = $eavConfig;
 	}
-
+	
 	public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
 	{
 		$eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
@@ -28,22 +29,28 @@ class InstallData implements InstallDataInterface
 			'newsletter_options',
 			[
 				'type'         => 'varchar',
-				'label'        => 'Multi Newsletter Options',
+				'label'        => 'Multi Newsletter',
 				'input'        => 'text',
 				'required'     => false,
-				'visible'      => true,
+				'visible'      => false,
 				'user_defined' => true,
 				'position'     => 999,
-				'system'       => 0,
+				'system'       => false,
 			]
 		);
-		$sampleAttribute = $this->eavConfig->getAttribute(Customer::ENTITY, 'newsletter_options');
+		$eavSetup->addAttributeToSet(
+            CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
+            CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
+            null,
+            'newsletter_options');
 
-		$sampleAttribute->setData(
+		$multiNews = $this->eavConfig->getAttribute(Customer::ENTITY, 'newsletter_options');
+		$multiNews->setData(
 			'used_in_forms',
 			['adminhtml_customer']
 
 		);
-		$sampleAttribute->save();
+		$multiNews->save();
+
 	}
 }
