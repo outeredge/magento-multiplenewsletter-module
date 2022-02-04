@@ -20,7 +20,7 @@ class InstallData implements InstallDataInterface
 		$this->eavSetupFactory = $eavSetupFactory;
 		$this->eavConfig       = $eavConfig;
 	}
-	
+
 	public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
 	{
 		$eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
@@ -28,14 +28,16 @@ class InstallData implements InstallDataInterface
 			\Magento\Customer\Model\Customer::ENTITY,
 			'newsletter_options',
 			[
-				'type'         => 'varchar',
-				'label'        => 'Multi Newsletter',
-				'input'        => 'text',
-				'required'     => false,
-				'visible'      => false,
-				'user_defined' => true,
-				'position'     => 999,
-				'system'       => false,
+				'type'         		=> 'varchar',
+				'label'        		=> 'Multi Newsletter',
+				'input'        		=> 'text',
+				'required'     		=> false,
+				'visible'      		=> false,
+				'user_defined' 		=> true,
+				'position'     		=> 99,
+				'is_used_in_grid' 	=> true,
+				'is_visible_in_grid'=> true,
+				'system'       		=> false,
 			]
 		);
 		$eavSetup->addAttributeToSet(
