@@ -66,12 +66,8 @@ class Options extends Template
         $customerNewsOpt = $customer->getCustomAttribute('newsletter_options')->getValue();
 
         if (!empty($customerNewsOpt)) {
-            $result = json_decode($customerNewsOpt, true);
-
-            if (isset($result[$newsletterOption])) {
-                if ($result[$newsletterOption] == 1) {
-                    return true;
-                }
+            if (strpos($customerNewsOpt, $newsletterOption) !== false) {
+                return true;
             }
         }
         return false;

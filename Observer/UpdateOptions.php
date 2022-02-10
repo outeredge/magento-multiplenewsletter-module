@@ -47,7 +47,7 @@ class UpdateOptions implements ObserverInterface
     {
         $newsOptions = $observer->getRequest()->getParam('newsletter_options', false);
 
-        $dataToSave = json_encode($newsOptions);
+        $dataToSave = implode(',', array_keys($newsOptions));
 
         $storeId = (int)$this->storeManager->getStore()->getId();
         $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
