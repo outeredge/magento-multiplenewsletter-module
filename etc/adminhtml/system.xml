@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="outeredge" translate="label" sortOrder="2000" class="outeredge-tab">
+            <label>outer/edge</label>
+        </tab>
+        <section id="multinewletteroptions" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Multi Newsletter Emails</label>
+            <tab>outeredge</tab>
+            <resource>OuterEdge_Multiplenewsletter::MultiplenewsletterSettings</resource>
+            <group id="list" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Multi Newsletter Emails list</label>
+                <field id="options" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Newsletter options</label>
+                    <comment>newsletter one, newsletter two, newsletter three</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -3,19 +3,17 @@
 namespace OuterEdge\Multiplenewsletter\Block\Form;
 
 use Magento\Framework\View\Element\Template;
-use OuterEdge\Layout\Helper\Data as LayoutHelper;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Customer\Model\SessionFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use OuterEdge\Multiplenewsletter\Helper\Data;
 
 class Options extends Template
 {
-    protected $_newsletterOptions;
 
-    /**
-     * @var LayoutHelper
-     */
-    protected $layoutHelper;
+    protected $newsletterOptions;
 
     /**
      * @var SessionFactory
@@ -28,31 +26,44 @@ class Options extends Template
     protected $customerRepositoryInterface;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * @param Context $context
-     * @param LayoutHelper $layoutHelper
      * @param SessionFactory $sessionFactory
      * @param CustomerRepositoryInterface $customerRepositoryInterface
+     * @param ScopeConfigInterface $scopeConfig
      * @param array $data
      */
     public function __construct(
         Context $context,
-        LayoutHelper $layoutHelper,
         SessionFactory $sessionFactory,
         CustomerRepositoryInterface $customerRepositoryInterface,
+        ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
-        $this->layoutHelper = $layoutHelper;
         $this->sessionFactory = $sessionFactory;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
+        $this->scopeConfig = $scopeConfig;
         parent::__construct($context, $data);
     }
 
     public function getNewsletterOptions()
     {
-        if ($this->_newsletterOptions === null) {
-            $this->_newsletterOptions = $this->layoutHelper->getGroupAndElements('newsletter_options');
+        if ($this->newsletterOptions === null) {
+
+            $data = $this->scopeConfig->getValue('multinewletteroptions/list/options', ScopeInterface::SCOPE_STORE);
+            foreach (explode(',', $data) as $option) {
+                $this->newsletterOptions[] = [
+                    'lable' => ucfirst(ltrim($option)),
+                    'code' => str_replace(' ', '_', ltrim($option))
+                ];
+            }
         }
-        return $this->_newsletterOptions;
+
+        return $this->newsletterOptions;
     }
 
     public function getNewsletterOptionsByCustomer($newsletterOption)
@@ -69,6 +80,10 @@ class Options extends Template
         }
 
         if (!empty($customerNewsOpt)) {
+            if ($customerNewsOpt == Data::CORE_NEWSLETTER) {
+                return true;
+            }
+
             if (strpos($customerNewsOpt, $newsletterOption) !== false) {
                 return true;
             }
