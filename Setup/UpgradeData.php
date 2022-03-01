@@ -101,7 +101,8 @@ class UpgradeData implements UpgradeDataInterface
                         VALUES (NULL, '".$attributeId."', '".$customer->getId()."', '".Data::CORE_NEWSLETTER_SUBSCRIBE."')");
 
                 } catch (\Exception $e) {
-                    throw new \Exception('Error updating multiple newsletter, customer: ' . $customerNewsletter['customer_id']. ' Reason: '. $e->getMessage());
+                    throw new \Exception('Error on multiple newsletter with customer: '
+                        .$customerNewsletter['customer_id'].' Reason: '.$e->getMessage());
                 }
             }
             $setup->endSetup();
