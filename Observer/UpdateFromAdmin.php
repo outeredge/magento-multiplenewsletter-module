@@ -39,9 +39,9 @@ class UpdateFromAdmin implements ObserverInterface
 
         foreach ($subscriptionStatus as $status) {
             if ($status) {
-                $customer->setCustomAttribute('newsletter_options', Data::CORE_NEWSLETTER);
+                $customer->setCustomAttribute('newsletter_options', Data::CORE_NEWSLETTER_SUBSCRIBE);
             } else {
-                $customer->setCustomAttribute('newsletter_options', 'NULL');
+                $customer->setCustomAttribute('newsletter_options', Data::CORE_NEWSLETTER_UNSUBSCRIBE);
             }
 
             try {

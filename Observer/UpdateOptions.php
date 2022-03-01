@@ -43,9 +43,9 @@ class UpdateOptions implements ObserverInterface
         }
 
         if ($observer->getRequest()->getParam('is_subscribed', false)) {
-            $dataToSave = Data::CORE_NEWSLETTER;
+            $dataToSave = Data::CORE_NEWSLETTER_SUBSCRIBE;
         } elseif (!$newsOptions) {
-            $dataToSave = 'NULL';
+            $dataToSave = Data::CORE_NEWSLETTER_UNSUBSCRIBE;
         }
 
         try {

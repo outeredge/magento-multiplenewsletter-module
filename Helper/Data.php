@@ -6,5 +6,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 
 class Data extends AbstractHelper
 {
-    CONST CORE_NEWSLETTER = 'all';
+    CONST CORE_NEWSLETTER_SUBSCRIBE = 'all';
+
+    CONST CORE_NEWSLETTER_UNSUBSCRIBE = 'null';
 }

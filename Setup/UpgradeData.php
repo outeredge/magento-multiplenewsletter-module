@@ -98,7 +98,7 @@ class UpgradeData implements UpgradeDataInterface
 
                     $connection->fetchAll("INSERT INTO `".$customerEntityVarchar."`
                         (`value_id`, `attribute_id`, `entity_id`, `value`)
-                        VALUES (NULL, '".$attributeId."', '".$customer->getId()."', '".Data::CORE_NEWSLETTER."')");
+                        VALUES (NULL, '".$attributeId."', '".$customer->getId()."', '".Data::CORE_NEWSLETTER_SUBSCRIBE."')");
 
                 } catch (\Exception $e) {
                     throw new \Exception('Error updating multiple newsletter, customer: ' . $customerNewsletter['customer_id']. ' Reason: '. $e->getMessage());

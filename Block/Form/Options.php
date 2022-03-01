@@ -80,7 +80,7 @@ class Options extends Template
         }
 
         if (!empty($customerNewsOpt)) {
-            if ($customerNewsOpt == Data::CORE_NEWSLETTER) {
+            if ($customerNewsOpt == Data::CORE_NEWSLETTER_SUBSCRIBE) {
                 return true;
             }
 
