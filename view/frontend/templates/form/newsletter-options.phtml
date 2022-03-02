@@ -5,17 +5,17 @@
 $newsletterOptions = $block->getNewsletterOptions();
 ?>
 
-<?php foreach ($newsletterOptions->getElements() as $newsletters): ?>
-    <?php $isEnabled = $block->getNewsletterOptionsByCustomer($newsletters->getNewsletterOptionsCode()); ?>
+<?php foreach ($newsletterOptions as $newsletters): ?>
+    <?php $isEnabled = $block->getNewsletterOptionsByCustomer($newsletters['code']); ?>
     <div class="field choice">
-        <input type="checkbox" onClick="unCheckAll(this);" name="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>]"
-            id="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>"
+        <input type="checkbox" onClick="unCheckAll(this);" name="newsletter_options[<?php echo $newsletters['code']?>]"
+            id="newsletter_options[<?php echo $newsletters['code']?>]"
             value="1"
-            title="<?= $block->escapeHtml($newsletters->getTitle()) ?>"
+            title="<?= $block->escapeHtml($newsletters['lable']) ?>"
             <?php if($isEnabled): ?> checked="checked"<?php endif; ?> class="checkbox"
         />
-        <label for="newsletter_options[<?php echo $newsletters->getNewsletterOptionsCode()?>">
-            <?= $block->escapeHtml($newsletters->getTitle()) ?>
+        <label for="newsletter_options[<?php echo $newsletters['code']?>]">
+            <?= $block->escapeHtml($newsletters['lable']) ?>
         </label>
     </div>
 <?php endforeach; ?>
@@ -31,4 +31,3 @@ $newsletterOptions = $block->getNewsletterOptions();
         allSubscription.checked = false;
     }
 </script>
-

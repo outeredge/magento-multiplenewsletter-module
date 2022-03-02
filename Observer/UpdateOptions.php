@@ -5,16 +5,11 @@ namespace OuterEdge\Multiplenewsletter\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Customer\Model\SessionFactory;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use OuterEdge\Multiplenewsletter\Helper\Data;
 
 class UpdateOptions implements ObserverInterface
 {
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $storeManager;
-
     /**
      * @var CustomerRepositoryInterface
      */
@@ -26,16 +21,13 @@ class UpdateOptions implements ObserverInterface
     protected $sessionFactory;
 
     /**
-     * @param StoreManagerInterface $storeManager
      * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param SessionFactory $sessionFactory
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
         CustomerRepositoryInterface $customerRepositoryInterface,
         SessionFactory $sessionFactory
     ) {
-        $this->storeManager = $storeManager;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
         $this->sessionFactory = $sessionFactory;
     }
@@ -46,11 +38,15 @@ class UpdateOptions implements ObserverInterface
     public function execute(Observer $observer) : void
     {
         $newsOptions = $observer->getRequest()->getParam('newsletter_options', false);
+        if ($newsOptions) {
+            $dataToSave = implode(',', array_keys($newsOptions));
+        }
 
-        $dataToSave = implode(',', array_keys($newsOptions));
-
-        $storeId = (int)$this->storeManager->getStore()->getId();
-        $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
+        if ($observer->getRequest()->getParam('is_subscribed', false)) {
+            $dataToSave = Data::CORE_NEWSLETTER_SUBSCRIBE;
+        } elseif (!$newsOptions) {
+            $dataToSave = Data::CORE_NEWSLETTER_UNSUBSCRIBE;
+        }
 
         try {
             $customer = $this->customerRepositoryInterface->getById($this->getCustomerId());
