@@ -8,5 +8,5 @@ class Data extends AbstractHelper
 {
     CONST CORE_NEWSLETTER_SUBSCRIBE = 'all';
 
-    CONST CORE_NEWSLETTER_UNSUBSCRIBE = 'null';
+    CONST CORE_NEWSLETTER_UNSUBSCRIBE = null;
 }
