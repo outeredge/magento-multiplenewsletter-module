@@ -8,14 +8,11 @@
     "authors": [
         {
             "name": "outer/edge",
-            "email": "hello@outeredgeuk.com",
-            "homepage": "https://outeredgeuk.com/",
+            "email": "support@outeredge.agency",
+            "homepage": "https://outeredge.agency",
             "role": "Developer"
         }
     ],
-    "require": {
-        "outeredge/magento-layout-module": "^3.2.0"
-    },
     "require-dev": {
         "magento-ecg/coding-standard": "~3.0",
         "outeredge/coding-standards": "~1.0.0",
