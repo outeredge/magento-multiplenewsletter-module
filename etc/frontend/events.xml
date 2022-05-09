@@ -3,5 +3,8 @@
     <event name="controller_action_postdispatch_newsletter_manage_save">
         <observer name="newsletter_options_save" instance="OuterEdge\Multiplenewsletter\Observer\UpdateOptions" />
     </event>
+    <event name="newsletter_subscriber_save_after">
+        <observer name="newsletter_subscriber_save" instance="OuterEdge\Multiplenewsletter\Observer\UpdateNewsSubscriber" />
+    </event>
 </config>
 
