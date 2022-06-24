@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="content">
-            <block class="Magento\Customer\Block\Newsletter" name="customer_newsletter" cacheable="false" template="OuterEdge_Multiplenewsletter::form/newsletter.phtml">
-                <container name="customer.newsletter.form.before" as="form_before" label="Newsletter Subscription Form Before" htmlTag="div" htmlClass="rewards"/>
-            </block>
-        </referenceContainer>
-        <referenceContainer name="customer.form.newsletter.extra">
-            <block class="OuterEdge\Multiplenewsletter\Block\Form\Options" template="OuterEdge_Multiplenewsletter::form/newsletter-options.phtml" />
-        </referenceContainer>
+        <referenceBlock name="customer_newsletter">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">OuterEdge_Multiplenewsletter::form/newsletter.phtml</argument>
+            </action>
+            <container name="customer.form.newsletter.extra">
+                <block name="multinewsletter.options" class="OuterEdge\Multiplenewsletter\Block\Form\Options" template="OuterEdge_Multiplenewsletter::form/newsletter-options.phtml" />
+            </container>
+        </referenceBlock>
     </body>
 </page>
-
-
