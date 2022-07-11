@@ -70,7 +70,6 @@ class UpgradeData implements UpgradeDataInterface
         $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
 
         if (version_compare($context->getVersion(), '1.0.1', '<')) {
-
             $setup->startSetup();
             $connection = $this->resource->getConnection(\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION);
             $customerEntity = $connection->getTableName('customer_entity');
@@ -78,7 +77,6 @@ class UpgradeData implements UpgradeDataInterface
             $attributeId = $this->eavAttribute->getIdByCode(\Magento\Customer\Model\Customer::ENTITY, 'newsletter_options');
 
             foreach ($this->getSubscriberCollection() as $customerNewsletter) {
-
                 if (!$customerNewsletter['customer_id']) {
                     continue;
                 }
@@ -99,7 +97,6 @@ class UpgradeData implements UpgradeDataInterface
                     $connection->fetchAll("INSERT INTO `".$customerEntityVarchar."`
                         (`value_id`, `attribute_id`, `entity_id`, `value`)
                         VALUES (NULL, '".$attributeId."', '".$customer->getId()."', '".Data::CORE_NEWSLETTER_SUBSCRIBE."')");
-
                 } catch (\Exception $e) {
                     throw new \Exception('Error on multiple newsletter with customer: '
                         .$customerNewsletter['customer_id'].' Reason: '.$e->getMessage());

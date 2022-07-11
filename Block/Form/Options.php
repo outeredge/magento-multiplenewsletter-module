@@ -53,7 +53,6 @@ class Options extends Template
     public function getNewsletterOptions()
     {
         if ($this->newsletterOptions === null) {
-
             $data = $this->scopeConfig->getValue('multinewletteroptions/list/options', ScopeInterface::SCOPE_STORE);
             foreach (explode(',', $data) as $option) {
                 $this->newsletterOptions[] = [

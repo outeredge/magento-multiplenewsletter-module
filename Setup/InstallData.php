@@ -36,7 +36,7 @@ class InstallData implements InstallDataInterface
 				'user_defined' 		=> true,
 				'position'     		=> 99,
 				'is_used_in_grid' 	=> true,
-				'is_visible_in_grid'=> true,
+				'is_visible_in_grid' => true,
 				'system'       		=> false,
 			]
 		);

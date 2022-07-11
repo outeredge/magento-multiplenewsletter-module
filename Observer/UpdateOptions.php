@@ -53,7 +53,6 @@ class UpdateOptions implements ObserverInterface
             $customer->setCustomAttribute('newsletter_options', $dataToSave);
 
             $this->customerRepositoryInterface->save($customer);
-
         } catch (\Exception $e) {
             throw new \Exception('Error saving multiple newsletter');
         }

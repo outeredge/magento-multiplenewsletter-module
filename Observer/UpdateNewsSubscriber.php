@@ -31,7 +31,6 @@ class UpdateNewsSubscriber implements ObserverInterface
         $event = $observer->getEvent();
 
         if ($customerId = $event->getSubscriber()->getCustomerId()) {
-
             if ($event->getSubscriber()) {
                 $dataToSave = Data::CORE_NEWSLETTER_SUBSCRIBE;
             } else {
