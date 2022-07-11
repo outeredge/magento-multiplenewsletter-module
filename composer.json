@@ -15,7 +15,7 @@
         }
     ],
     "require-dev": {
-        "outeredge/dev-dependencies": "^2.0"
+        "outeredge/dev-dependencies": "^3.0"
     },
     "autoload": {
         "files": [
