@@ -2,15 +2,16 @@
 
 namespace OuterEdge\Multiplenewsletter\Setup\Patch\Data;
 
-use Magento\Customer\Model\Customer;
-use Magento\Eav\Setup\EavSetupFactory;
-use Magento\Eav\Model\Config;
+use Exception;
+use Psr\Log\LoggerInterface;
+use Magento\Customer\Api\CustomerMetadataInterface;
+use Magento\Customer\Model\ResourceModel\Attribute as AttributeResource;
+use Magento\Customer\Setup\CustomerSetup;
+use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\Setup\Patch\PatchVersionInterface;
-use Magento\Customer\Api\CustomerMetadataInterface;
 
-class AddNewsletterOptionsAttr implements DataPatchInterface, PatchVersionInterface
+class AddNewsletterOptionsAttr implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -18,28 +19,38 @@ class AddNewsletterOptionsAttr implements DataPatchInterface, PatchVersionInterf
     private $moduleDataSetup;
 
     /**
-     * @var EavSetupFactory
+     * @var CustomerSetup
      */
-    private $eavSetupFactory;
+    private $customerSetup;
 
     /**
-     * @var Config
+     * @var AttributeResource
      */
-    private $eavConfig;
+    private $attributeResource;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * Constructor
+     *
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param EavSetupFactory $eavSetupFactory
-     * @param Config $eavConfig
+     * @param CustomerSetupFactory $customerSetupFactory
+     * @param AttributeResource $attributeResource
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        EavSetupFactory $eavSetupFactory,
-        Config $eavConfig
+        CustomerSetupFactory $customerSetupFactory,
+        AttributeResource $attributeResource,
+        LoggerInterface $logger
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->eavSetupFactory = $eavSetupFactory;
-        $this->eavConfig =$eavConfig;
+        $this->customerSetup = $customerSetupFactory->create(['setup' => $moduleDataSetup]);
+        $this->attributeResource = $attributeResource;
+        $this->logger = $logger;
     }
 
     /**
@@ -47,39 +58,53 @@ class AddNewsletterOptionsAttr implements DataPatchInterface, PatchVersionInterf
      */
     public function apply()
     {
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
-        $eavSetup->addAttribute(
-            Customer::ENTITY,
-            'newsletter_options',
-			[
-				'type'         		=> 'varchar',
-				'label'        		=> 'Multi Newsletter',
-				'input'        		=> 'text',
-				'required'     		=> false,
-				'visible'      		=> false,
-				'user_defined' 		=> true,
-				'position'     		=> 99,
-				'is_used_in_grid' 	=> true,
-				'is_visible_in_grid'=> true,
-				'system'       		=> false,
-			]
-        );
+        // Start setup
+        $this->moduleDataSetup->getConnection()->startSetup();
 
-        $eavSetup->addAttributeToSet(
-            CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
-            CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
-            null,
-            'newsletter_options');
+        try {
+            // Add customer attribute with settings
+            $this->customerSetup->addAttribute(
+                CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
+                'newsletter_options',
+                [                    
+                    'type'         		=> 'varchar',
+                    'label'        		=> 'Multi Newsletter',
+                    'input'        		=> 'text',
+                    'required'     		=> false,
+                    'visible'      		=> false,
+                    'user_defined' 		=> true,
+                    'position'     		=> 99,
+                    'is_used_in_grid' 	=> true,
+                    'is_visible_in_grid'=> true,
+                    'system'       		=> false
+                ]
+            );
 
-		$multiNews = $this->eavConfig->getAttribute(Customer::ENTITY, 'newsletter_options');
-		$multiNews->setData(
-			'used_in_forms',
-			['adminhtml_customer']
+            // Add attribute to default attribute set and group
+            $this->customerSetup->addAttributeToSet(
+                CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER,
+                CustomerMetadataInterface::ATTRIBUTE_SET_ID_CUSTOMER,
+                null,
+                'newsletter_options'
+            );
 
-		);
-		$multiNews->save();
+            // Get the newly created attribute's model
+            $attribute = $this->customerSetup->getEavConfig()
+                ->getAttribute(CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER, 'newsletter_options');
 
-        return $this;
+            // Make attribute visible in Admin customer form
+            $attribute->setData('used_in_forms', [
+                'adminhtml_customer'
+            ]);
+
+            // Save attribute using its resource model
+            $this->attributeResource->save($attribute);
+        } catch (Exception $e) {
+            $this->logger->err($e->getMessage());
+        }
+
+        // End setup
+        $this->moduleDataSetup->getConnection()->endSetup();
     }
 
     /**
@@ -88,14 +113,6 @@ class AddNewsletterOptionsAttr implements DataPatchInterface, PatchVersionInterf
     public static function getDependencies()
     {
         return [];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getVersion()
-    {
-        return '1.0.1';
     }
 
     /**
