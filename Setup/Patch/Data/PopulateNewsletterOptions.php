@@ -76,7 +76,6 @@ class PopulateNewsletterOptions implements DataPatchInterface
         $attributeId = $this->eavAttribute->getIdByCode(\Magento\Customer\Model\Customer::ENTITY, 'newsletter_options');
 
         foreach ($this->getSubscriberCollection() as $customerNewsletter) {
-
             if (!$customerNewsletter['customer_id']) {
                 continue;
             }
@@ -97,7 +96,6 @@ class PopulateNewsletterOptions implements DataPatchInterface
                 $connection->fetchAll("INSERT INTO `".$customerEntityVarchar."`
                     (`value_id`, `attribute_id`, `entity_id`, `value`)
                     VALUES (NULL, '".$attributeId."', '".$customer->getId()."', '".Data::CORE_NEWSLETTER_SUBSCRIBE."')");
-
             } catch (\Exception $e) {
                 throw new \Exception('Error on multiple newsletter with customer: '
                     .$customerNewsletter['customer_id'].' Reason: '.$e->getMessage());
