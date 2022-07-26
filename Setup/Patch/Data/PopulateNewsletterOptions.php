@@ -3,7 +3,6 @@
 namespace OuterEdge\Multiplenewsletter\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\Setup\Patch\PatchVersionInterface;
 use Magento\Newsletter\Model\ResourceModel\Subscriber\CollectionFactory as NewsCollectionFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use OuterEdge\Multiplenewsletter\Helper\Data;
@@ -11,7 +10,7 @@ use Magento\Framework\App\State;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute;
 
-class PopulateNewsletterOptions implements DataPatchInterface, PatchVersionInterface
+class PopulateNewsletterOptions implements DataPatchInterface
 {
     /**
      * @var NewsCollectionFactory
@@ -114,14 +113,6 @@ class PopulateNewsletterOptions implements DataPatchInterface, PatchVersionInter
     public static function getDependencies()
     {
         return [AddNewsletterOptionsAttr::class,];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getVersion()
-    {
-        return '1.0.1';
     }
 
     /**
