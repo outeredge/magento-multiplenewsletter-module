@@ -68,7 +68,13 @@ class PopulateNewsletterOptions implements DataPatchInterface
      */
     public function apply()
     {
-        $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
+        try {
+            $this->state->getAreaCode();
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            if ($e->getMessage() == 'Area code is not set') {
+                $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
+            }
+        }
 
         $connection = $this->resource->getConnection(\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION);
         $customerEntity = $connection->getTableName('customer_entity');
