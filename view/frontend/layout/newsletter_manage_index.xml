@@ -5,9 +5,9 @@
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">OuterEdge_Multiplenewsletter::form/newsletter.phtml</argument>
             </action>
-            <container name="customer.form.newsletter.extra">
-                <block name="multinewsletter.options" class="OuterEdge\Multiplenewsletter\Block\Form\Options" template="OuterEdge_Multiplenewsletter::form/newsletter-options.phtml" />
-            </container>
         </referenceBlock>
+        <referenceContainer name="customer.form.newsletter.extra">
+            <block class="OuterEdge\Multiplenewsletter\Block\Form\Options" template="OuterEdge_Multiplenewsletter::form/newsletter-options.phtml" />
+        </referenceContainer>
     </body>
 </page>
